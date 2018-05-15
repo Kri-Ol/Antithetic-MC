@@ -8,14 +8,15 @@
 
 #define func auto
 
+using rng_t = std::mt19937_64;
 
 static inline func to_integrate(const double x) -> double {
     return 1.0 / (1.0 + x);
 }
 
 
-static func normal_MC(const int           N,
-                            std::mt19937& rng) -> std::tuple<double, double> {
+static func normal_MC(const int    N,
+                            rng_t& rng) -> std::tuple<double, double> {
 
     auto u01{ std::uniform_real_distribution<double>{0.0, 1.0 } };
 
@@ -38,8 +39,8 @@ static func normal_MC(const int           N,
     return { avg, std::sqrt(var / (double(N - 1))) };
 }
 
-static func antithetic_MC(const int           N,
-                                std::mt19937& rng) -> std::tuple<double, double> {
+static func antithetic_MC(const int    N,
+                                rng_t& rng) -> std::tuple<double, double> {
 
     auto u01{ std::uniform_real_distribution<double>{0.0, 1.0 } };
 
@@ -66,7 +67,7 @@ static func antithetic_MC(const int           N,
 func main() -> int {
     constexpr int N{ 3000 };
 
-    auto rng{ std::mt19937{123456789UL} };
+    auto rng{ rng_t{123456789UL} };
 
     auto [avg, stddev] = normal_MC(N, rng);
     std::cout << avg << "   " << stddev << "\n";
